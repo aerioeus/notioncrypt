@@ -3,7 +3,6 @@ import os
 import json
 from base64 import binascii
 
-from colorama import init, Fore
 from cryptography.fernet import Fernet, InvalidToken
 from decouple import config
 from notion_client import Client
@@ -13,14 +12,12 @@ from notioncrypt_functions import (
 	create_new_page, get_meta_details, UnsupportedBlockError
 )
 
-# allows printing of color to shell
-init(autoreset=True)
 
 # the name of the directory that will store the backedup encrypted files
 BACKUP_DIRECTORY = "Backups"
 
 # minor utility function for print error messages
-print_error = lambda msg: print(Fore.RED + msg)
+print_error = lambda msg: print( msg)
 	
 
 def main():
@@ -35,7 +32,7 @@ def main():
 		response, page_url = sys.argv[1], sys.argv[2]
 	elif len(sys.argv[1:]) == 1 and sys.argv[1] in HELPER_ARGS:
 		if sys.argv[1] == "generate_key":
-			print(Fore.YELLOW + "warning if you lose your key you will not be able to decrypt your pages")
+			print("warning if you lose your key you will not be able to decrypt your pages")
 			print(f"key: '{Fernet.generate_key().decode()}'")
 			exit()
 		if sys.argv[1] == "create_env":
@@ -109,15 +106,15 @@ def main():
 		exit()
 
 	if response == "encrypt":
-		print(Fore.GREEN + "encrypting page...")
+		print("encrypting page...")
 		handle_encryption(notion, meta_pagedetails, page_id, fernetobject)
 		
 	if response == "decrypt":
-		print(Fore.GREEN + "decrypting page...")
+		print("decrypting page...")
 		handle_decryption(notion, meta_pagedetails, page_id, fernetobject)
 
 
-	print(Fore.GREEN + f"Operation successfull, check out {get_url(meta_pagedetails['parent']['page_id'])}")
+	print(f"Operation successfull, check out {get_url(meta_pagedetails['parent']['page_id'])}")
 	
 
 def handle_decryption(notion, meta_pagedetails, page_id, fernetobject):
